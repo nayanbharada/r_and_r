@@ -1,0 +1,98 @@
+{% extends "recognition/base.html" %}
+
+{% block title %}Admin Panel | Adani Recognition{% endblock %}
+
+{% block content %}
+<section class="admin-hero">
+    <div>
+        <span class="eyebrow">Admin overview</span>
+        <h1>Employee rewards control panel</h1>
+        <p>View every employee, department, monthly token allowance, tokens sent, remaining balance, and recognition activity.</p>
+    </div>
+</section>
+
+<section class="stats-grid">
+    <article>
+        <span>Total employees</span>
+        <strong>{{ employee_count }}</strong>
+    </article>
+    <article>
+        <span>Tokens sent this month</span>
+        <strong>{{ total_sent }}</strong>
+    </article>
+    <article>
+        <span>Tokens still available</span>
+        <strong>{{ total_remaining }}</strong>
+    </article>
+    <article>
+        <span>Redemption requests</span>
+        <strong>{{ redemption_count }}</strong>
+    </article>
+</section>
+
+<section class="panel employee-panel">
+    <div class="panel-heading">
+        <span class="icon-badge">E</span>
+        <div>
+            <h2>All employees</h2>
+            <p>Complete employee reward status</p>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table class="employee-table">
+            <thead>
+                <tr>
+                    <th>Employee</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Department</th>
+                    <th>Designation</th>
+                    <th>Allowance</th>
+                    <th>Sent</th>
+                    <th>Remaining</th>
+                    <th>Received</th>
+                    <th>Redeemed</th>
+                    <th>Balance</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                    <tr>
+                        <td>
+                            <div class="employee-cell">
+                                <span class="avatar">{{ employee.display_name|slice:":1" }}</span>
+                                <div>
+                                    <strong>{{ employee.display_name }}</strong>
+                                    <small>{{ employee.employee_id }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ employee.user.email }}</td>
+                        <td><span class="role-pill {{ employee.role }}">{{ employee.get_role_display }}</span></td>
+                        <td>{{ employee.department }}</td>
+                        <td>{{ employee.designation }}</td>
+                        <td>{{ employee.monthly_token_allowance }}</td>
+                        <td>{{ employee.tokens_sent_this_month }}</td>
+                        <td>{{ employee.tokens_remaining }}</td>
+                        <td>{{ employee.tokens_received|default:0 }}</td>
+                        <td>{{ employee.points_redeemed|default:0 }}</td>
+                        <td>{{ employee.redeemable_points }}</td>
+                        <td>
+                            {% if employee.user.is_active %}
+                                <span class="status-pill active">Active</span>
+                            {% else %}
+                                <span class="status-pill inactive">Inactive</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="12" class="empty-feed">No employees found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

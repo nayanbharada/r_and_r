@@ -1,0 +1,130 @@
+{% extends "recognition/base.html" %}
+
+{% block title %}Dashboard | Adani Recognition{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-copy">
+        <span class="eyebrow">Peer-powered appreciation</span>
+        <h1>Celebrate the people moving Adani forward.</h1>
+        <p>Send monthly reward tokens to colleagues for ownership, teamwork, safety, innovation, and customer impact.</p>
+    </div>
+    <div class="token-wallet">
+        <span>Monthly balance</span>
+        <strong>{{ profile.tokens_remaining }}</strong>
+        <small>of {{ profile.monthly_token_allowance }} tokens left</small>
+        <div class="meter">
+            <span style="width: {% widthratio profile.tokens_remaining profile.monthly_token_allowance 100 %}%"></span>
+        </div>
+    </div>
+</section>
+
+<section class="stats-grid">
+    <article>
+        <span>Total tokens shared</span>
+        <strong>{{ total_tokens }}</strong>
+    </article>
+    <article>
+        <span>Recognition moments</span>
+        <strong>{{ total_moments }}</strong>
+    </article>
+    <article>
+        <span>Employees onboarded</span>
+        <strong>{{ employee_count }}</strong>
+    </article>
+    <article>
+        <span>Your redeemable points</span>
+        <strong>{{ redeemable_points }}</strong>
+    </article>
+</section>
+
+<section class="workbench">
+    <form class="panel recognition-form" method="post">
+        {% csrf_token %}
+        <div class="panel-heading">
+            <span class="icon-badge">+</span>
+            <div>
+                <h2>Reward a colleague</h2>
+                <p>{{ profile.display_name }} · {{ profile.department }}</p>
+            </div>
+        </div>
+
+        {% if form.non_field_errors %}
+            <div class="form-errors">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <label>
+            Receiver
+            {{ form.receiver }}
+            {{ form.receiver.errors }}
+        </label>
+        <div class="form-row">
+            <label>
+                Tokens
+                {{ form.tokens }}
+                {{ form.tokens.errors }}
+            </label>
+            <label>
+                Category
+                {{ form.category }}
+                {{ form.category.errors }}
+            </label>
+        </div>
+        <label>
+            Recognition message
+            {{ form.message }}
+            {{ form.message.errors }}
+        </label>
+        <button class="primary-button" type="submit">Send recognition</button>
+    </form>
+
+    <aside class="panel leaderboard">
+        <div class="panel-heading">
+            <span class="icon-badge">#</span>
+            <div>
+                <h2>Top recognized</h2>
+                <p>This month’s visible momentum</p>
+            </div>
+        </div>
+        <ol>
+            {% for employee in leaderboard %}
+                <li>
+                    <span class="avatar">{{ employee.display_name|slice:":1" }}</span>
+                    <div>
+                        <strong>{{ employee.display_name }}</strong>
+                        <small>{{ employee.department }} · {{ employee.recognition_count }} moments</small>
+                    </div>
+                    <b>{{ employee.tokens_received|default:0 }}</b>
+                </li>
+            {% empty %}
+                <li class="empty-state">No recognitions yet.</li>
+            {% endfor %}
+        </ol>
+    </aside>
+</section>
+
+<section class="feed">
+    <div class="section-heading">
+        <h2>Recognition feed</h2>
+        <p>Recent tokens shared across teams</p>
+    </div>
+    <div class="feed-list">
+        {% for item in recognitions %}
+            <article class="recognition-card">
+                <div class="card-top">
+                    <span class="avatar">{{ item.receiver.display_name|slice:":1" }}</span>
+                    <div>
+                        <strong>{{ item.receiver.display_name }}</strong>
+                        <small>{{ item.get_category_display }} from {{ item.sender.display_name }}</small>
+                    </div>
+                    <b>{{ item.tokens }} tokens</b>
+                </div>
+                <p>{{ item.message }}</p>
+                <time>{{ item.created_at|date:"M d, Y · h:i A" }}</time>
+            </article>
+        {% empty %}
+            <div class="empty-feed">Start by sending the first recognition.</div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

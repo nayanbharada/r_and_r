@@ -1,0 +1,46 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Adani Recognition{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'recognition/styles.css' %}">
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="{% url 'dashboard' %}" aria-label="Adani Recognition home">
+            <span class="brand-mark">A</span>
+            <span>
+                <strong>Adani Group</strong>
+                <small>Rewards & Recognition</small>
+            </span>
+        </a>
+        {% if user.is_authenticated %}
+            <div class="topbar-actions">
+                <a class="ghost-button" href="{% url 'redeem_points' %}">Redeem</a>
+                {% if user.is_staff or user.employeeprofile.can_manage_rewards %}
+                    <a class="ghost-button" href="{% url 'admin_panel' %}">Admin panel</a>
+                {% endif %}
+                {% if user.is_superuser %}
+                    <a class="ghost-button" href="{% url 'admin:index' %}">Django admin</a>
+                {% endif %}
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button class="ghost-button" type="submit">Sign out</button>
+                </form>
+            </div>
+        {% endif %}
+    </header>
+    <main>
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

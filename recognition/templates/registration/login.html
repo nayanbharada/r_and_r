@@ -1,0 +1,29 @@
+{% extends "recognition/base.html" %}
+
+{% block title %}Sign in | Adani Recognition{% endblock %}
+
+{% block content %}
+<section class="login-shell">
+    <div class="login-visual">
+        <span class="eyebrow">Adani Group</span>
+        <h1>Reward meaningful work with tokens that travel across teams.</h1>
+        <p>Employees can appreciate peers, stay within monthly limits, and make recognition visible.</p>
+    </div>
+    <form class="login-card" method="post">
+        {% csrf_token %}
+        <h2>Welcome back</h2>
+        {% if form.errors %}
+            <div class="form-errors">Please check your email and password.</div>
+        {% endif %}
+        <label>
+            Email
+            {{ form.username }}
+        </label>
+        <label>
+            Password
+            {{ form.password }}
+        </label>
+        <button class="primary-button" type="submit">Sign in</button>
+    </form>
+</section>
+{% endblock %}

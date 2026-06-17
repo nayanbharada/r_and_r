@@ -1,0 +1,99 @@
+{% extends "recognition/base.html" %}
+
+{% block title %}Redeem Points | Adani Recognition{% endblock %}
+
+{% block content %}
+<section class="admin-hero redeem-hero">
+    <div>
+        <span class="eyebrow">Rewards store</span>
+        <h1>Redeem your recognition points</h1>
+        <p>Use points received from colleagues for employee rewards. Your current balance is {{ profile.redeemable_points }} points.</p>
+    </div>
+</section>
+
+<section class="stats-grid">
+    <article>
+        <span>Points received</span>
+        <strong>{{ profile.points_received }}</strong>
+    </article>
+    <article>
+        <span>Points redeemed</span>
+        <strong>{{ profile.points_redeemed }}</strong>
+    </article>
+    <article>
+        <span>Available balance</span>
+        <strong>{{ profile.redeemable_points }}</strong>
+    </article>
+</section>
+
+<section class="workbench">
+    <form class="panel recognition-form" method="post">
+        {% csrf_token %}
+        <div class="panel-heading">
+            <span class="icon-badge">R</span>
+            <div>
+                <h2>Request redemption</h2>
+                <p>Choose an available reward</p>
+            </div>
+        </div>
+
+        {% if form.non_field_errors %}
+            <div class="form-errors">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <label>
+            Reward
+            {{ form.reward }}
+            {{ form.reward.errors }}
+        </label>
+        <button class="primary-button" type="submit">Redeem points</button>
+    </form>
+
+    <aside class="panel leaderboard">
+        <div class="panel-heading">
+            <span class="icon-badge">H</span>
+            <div>
+                <h2>Your redemptions</h2>
+                <p>Latest reward requests</p>
+            </div>
+        </div>
+        <ol>
+            {% for redemption in redemptions %}
+                <li>
+                    <div>
+                        <strong>{{ redemption.reward.name }}</strong>
+                        <small>{{ redemption.created_at|date:"M d, Y" }} · {{ redemption.get_status_display }}</small>
+                    </div>
+                    <b>{{ redemption.reward.points_required }}</b>
+                </li>
+            {% empty %}
+                <li class="empty-state">No redemptions yet.</li>
+            {% endfor %}
+        </ol>
+    </aside>
+</section>
+
+<section class="feed">
+    <div class="section-heading">
+        <h2>Reward catalog</h2>
+        <p>Available items for redemption</p>
+    </div>
+    <div class="feed-list">
+        {% for reward in rewards %}
+            <article class="recognition-card">
+                <div class="card-top">
+                    <span class="avatar">R</span>
+                    <div>
+                        <strong>{{ reward.name }}</strong>
+                        <small>{{ reward.stock }} in stock</small>
+                    </div>
+                    <b>{{ reward.points_required }} pts</b>
+                </div>
+                <p>{{ reward.description }}</p>
+            </article>
+        {% empty %}
+            <div class="empty-feed">No rewards are active right now.</div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
