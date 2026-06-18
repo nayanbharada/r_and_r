@@ -26,6 +26,80 @@ The purpose of this system is to provide Adani Group employees with a simple dig
 - Department managers
 - System administrator
 
+## Technology Stack
+
+### Application Layer
+
+- Backend framework: Python Django
+- Programming language: Python
+- Authentication: Django authentication with email and password login
+- Role handling: Django user flags plus employee profile roles
+- Frontend: Django templates, HTML, CSS
+- Styling: Custom responsive CSS
+- Admin: Django admin and custom staff/admin panel
+
+### Data Layer
+
+- Development database: SQLite
+- Production database recommendation: PostgreSQL
+- ORM: Django ORM
+- Migration management: Django migrations
+
+### Quality and Testing
+
+- Unit and integration tests: Django test framework
+- Business rule validation: Django model validation and form validation
+- Test coverage areas: login, roles, reward sending, token limits, admin access, redemption, and stock control
+
+### Deployment and Operations
+
+- Application server recommendation: Gunicorn or uWSGI
+- Web server/reverse proxy recommendation: Nginx
+- Cloud hosting: To be finalized by IT and Cloud team
+- Static file serving: Cloud object storage or web server static hosting
+- Secrets and configuration: Environment variables
+- Monitoring recommendation: Application logs, server metrics, uptime monitoring, and database health checks
+
+## Team Dependencies and Ownership
+
+### HR Team
+
+- Provide employee master data.
+- Define employee ID, name, email, department, designation, manager, and active status fields.
+- Confirm reward categories and recognition policy.
+- Define monthly token allowance by employee group if different from the default.
+- Define redemption reward catalog and policy.
+- Own employee onboarding/offboarding inputs.
+
+### Development Team
+
+- Build Django backend, frontend templates, forms, and business logic.
+- Implement email login, role-based access, reward sending, token limits, redemption, and admin panel.
+- Write migrations, tests, and technical documentation.
+- Fix bugs and support future enhancements.
+
+### IT and Cloud Team
+
+- Provide hosting environment and cloud architecture.
+- Own application deployment, environment setup, SSL, domain/DNS, and network rules.
+- Manage database provisioning, backup, restore, monitoring, and maintenance.
+- Configure secrets, environment variables, logging, and access controls.
+- Support production release, rollback, and infrastructure operations.
+
+### Admin/HR Operations Team
+
+- Manage employee role assignment for staff and admin access.
+- Maintain reward catalog stock and active status.
+- Monitor redemptions and coordinate fulfillment.
+- Review employee recognition activity and resolve operational issues.
+
+### Security/Compliance Team
+
+- Review authentication and access control rules.
+- Validate employee data handling and retention expectations.
+- Review audit needs for reward and redemption activity.
+- Approve production access permissions and admin account policy.
+
 ## User Roles
 
 ### Employee
@@ -259,4 +333,3 @@ The current system includes automated tests for:
 - Redemption with sufficient points.
 - Redemption failure with insufficient points.
 - Redemption failure for out-of-stock rewards.
-
